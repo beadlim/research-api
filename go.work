@@ -1,3 +1,7 @@
 go 1.25.7
 
-use ./stages/01-monolith
+use (
+	./stages/01-monolith
+	./stages/02-users-extracted/monolith-partial
+	./stages/02-users-extracted/users-service
+)
