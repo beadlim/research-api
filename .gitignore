@@ -2,3 +2,4 @@ stages/*/monolith
 stages/*/service
 *.test
 *.out
+results/**/raw.json
