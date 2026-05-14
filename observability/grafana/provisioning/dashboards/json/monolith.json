@@ -1,0 +1,142 @@
+{
+  "title": "Research API — Monolith (Stage 01)",
+  "uid": "research-monolith",
+  "tags": ["research", "monolith"],
+  "refresh": "10s",
+  "time": { "from": "now-30m", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Request Rate (req/s)",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum by(endpoint) (rate(http_requests_total[1m]))",
+          "legendFormat": "{{endpoint}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Error Rate (%)",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum by(endpoint) (rate(http_requests_total{status=~\"5..\"}[1m])) / sum by(endpoint) (rate(http_requests_total[1m])) * 100",
+          "legendFormat": "{{endpoint}}"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Latency P50 (ms)",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 8, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum by(endpoint, le) (rate(http_request_duration_seconds_bucket[1m]))) * 1000",
+          "legendFormat": "p50 {{endpoint}}"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Latency P95 (ms)",
+      "type": "timeseries",
+      "gridPos": { "x": 8, "y": 8, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by(endpoint, le) (rate(http_request_duration_seconds_bucket[1m]))) * 1000",
+          "legendFormat": "p95 {{endpoint}}"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Latency P99 (ms)",
+      "type": "timeseries",
+      "gridPos": { "x": 16, "y": 8, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, sum by(endpoint, le) (rate(http_request_duration_seconds_bucket[1m]))) * 1000",
+          "legendFormat": "p99 {{endpoint}}"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Requests In-Flight",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 16, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "http_requests_in_flight",
+          "legendFormat": "in-flight"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "CPU Usage — API container (%)",
+      "type": "timeseries",
+      "gridPos": { "x": 8, "y": 16, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "rate(container_cpu_usage_seconds_total{name=~\".*api.*\"}[1m]) * 100",
+          "legendFormat": "{{name}}"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Memory Usage — API container (MB)",
+      "type": "timeseries",
+      "gridPos": { "x": 16, "y": 16, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "container_memory_usage_bytes{name=~\".*api.*\"} / 1024 / 1024",
+          "legendFormat": "{{name}}"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Go Goroutines",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 24, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "go_goroutines",
+          "legendFormat": "goroutines"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Go Heap Alloc (MB)",
+      "type": "timeseries",
+      "gridPos": { "x": 8, "y": 24, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "go_memstats_heap_alloc_bytes / 1024 / 1024",
+          "legendFormat": "heap alloc"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "GC Duration (ms)",
+      "type": "timeseries",
+      "gridPos": { "x": 16, "y": 24, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "rate(go_gc_duration_seconds_sum[1m]) / rate(go_gc_duration_seconds_count[1m]) * 1000",
+          "legendFormat": "avg GC"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39
+}

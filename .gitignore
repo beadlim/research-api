@@ -1,0 +1,4 @@
+stages/*/monolith
+stages/*/service
+*.test
+*.out
