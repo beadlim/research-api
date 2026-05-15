@@ -313,6 +313,16 @@ research-api/
 
 ---
 
+## Trabalhos Futuros (segunda rodada — pós resultados preliminares)
+
+- **Stage 06 — banco físico separado por serviço**: hoje o Stage 05 usa schema-per-service no mesmo servidor PostgreSQL. Banco físico separado por serviço isolaria ainda mais o I/O e mudaria o perfil de latência, permitindo comparar o custo de rede vs. ganho de isolamento real.
+
+- **Escalonamento horizontal**: rodar 2-3 réplicas do `orders-service` (gargalo identificado — maior CPU e latência por realizar 2 chamadas HTTP inter-serviços por `POST /orders`) com load balancing no NGINX, medindo o ganho de throughput e redução de P95.
+
+- **Análise estatística formal**: calcular desvio padrão e intervalos de confiança entre os 5 estágios para embasar as conclusões com rigor estatístico na seção de Resultados do TCC.
+
+---
+
 ## Comandos Úteis
 
 ```bash
