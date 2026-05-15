@@ -202,14 +202,41 @@ docker compose -f docker-compose.04-orders-inventory.yml down
 
 ---
 
-### ⏳ Stage 05 — Microsserviços Completos
+### ✅ Stage 05 — Microsserviços Completos (schema-per-service)
 
-**O que fazer:**
-1. Monolito completamente removido
-2. Cada serviço com seu próprio schema no PostgreSQL (ou banco separado)
-3. NGINX roteia 100% do tráfego para os microsserviços
-4. Testar com e sem escalonamento horizontal
-5. Salvar em `results/stage-05/summary.json`
+**Arquitetura:**
+- NGINX gateway na porta 8080
+- `/users` → `users-service` (Go, porta 8081, schema `users_schema`)
+- `/products` → `products-service` (Go, porta 8082, schema `products_schema`)
+- `/orders` → `orders-service` (Go, porta 8083, schema `orders_schema`)
+- `/inventory` → `inventory-service` (Go, porta 8084, schema `inventory_schema`)
+- Monolito completamente removido
+- Schemas isolados no mesmo servidor PostgreSQL (schema-per-service)
+- `POST /orders` realiza 2 chamadas HTTP inter-serviços: users-service + products-service
+
+**Arquivo:** `docker-compose.05-full-microservices.yml`  
+**NGINX config:** `gateway/nginx/stage-05.conf`  
+**k6:** `load-tests/k6/stage-05-full-microservices.js`  
+**Resultados:** `results/stage-05/summary.json`
+
+| Métrica | Resultado | vs Stage 04 | vs Baseline |
+|---|---|---|---|
+| Throughput | 1.769 req/s | +9% | -24% |
+| P50 | 6,52 ms | -43% | +229% |
+| P90 | 97,98 ms | -40% | +1.315% |
+| P95 | 216,99 ms | -24% | +2.045% |
+| Máximo | 1.465,10 ms | +42% | +1.044% |
+| Taxa de erro | 0,21% | — | — |
+| Total requisições | 1.804.870 | — | — |
+
+**Observação:** Schema-per-service melhora P95 em 24% em relação ao stage-04 (217ms vs 286ms). A separação de schemas elimina contenção entre serviços na camada de banco, mesmo no servidor compartilhado. Taxa de erro de 0,21% abaixo do threshold de 1% (todos erros em `POST /orders` sob alta concorrência). Throughput recupera 9% frente ao stage-04 graças ao pool de conexões isolado por serviço.
+
+**Como rodar:**
+```bash
+docker compose -f docker-compose.05-full-microservices.yml up --build -d
+k6 run --summary-export results/stage-05/summary.json load-tests/k6/stage-05-full-microservices.js
+docker compose -f docker-compose.05-full-microservices.yml down
+```
 
 ---
 
@@ -224,39 +251,39 @@ research-api/
 │   │   └── monolith-partial/
 │   ├── 03-products-extracted/     ✅ products-service + monolith-partial
 │   ├── 04-orders-inventory/       ✅ orders-service + inventory-service
-│   └── 05-full-microservices/     ⏳ a implementar
+│   └── 05-full-microservices/     ✅ schema-per-service
 ├── gateway/
 │   └── nginx/
 │       ├── stage-02.conf          ✅
 │       ├── stage-03.conf          ✅
 │       ├── stage-04.conf          ✅
-│       └── stage-05.conf          ⏳
+│       └── stage-05.conf          ✅
 ├── load-tests/k6/
 │   ├── baseline.js                ✅
 │   ├── stage-02-users-extracted.js ✅
 │   ├── stage-03-products-extracted.js ✅
 │   ├── stage-04-orders-inventory.js   ✅
-│   └── stage-05-full-microservices.js ⏳
+│   └── stage-05-full-microservices.js ✅
 ├── observability/
 │   ├── prometheus/
 │   │   ├── prometheus.yml         ✅ stage 01
 │   │   ├── prometheus-stage02.yml ✅ stage 02
-│   │   └── prometheus-stage0X.yml ⏳ stages seguintes
+│   │   └── prometheus-stage05.yml ✅ stage 05
 │   └── grafana/
 │       └── provisioning/
 │           └── dashboards/json/
-│               └── monolith.json  ✅ (usar para todos os estágios)
+│               └── monolith.json  ✅ (painéis CPU/mem usam process_* metrics)
 ├── results/
 │   ├── baseline/summary.json      ✅
 │   ├── stage-02/summary.json      ✅
 │   ├── stage-03/summary.json      ✅
 │   ├── stage-04/summary.json      ✅
-│   └── stage-05/summary.json      ⏳
+│   └── stage-05/summary.json      ✅
 ├── docker-compose.01-monolith.yml          ✅
 ├── docker-compose.02-users-extracted.yml   ✅
 ├── docker-compose.03-products-extracted.yml ✅
 ├── docker-compose.04-orders-inventory.yml   ✅
-├── docker-compose.05-full-microservices.yml ⏳
+├── docker-compose.05-full-microservices.yml ✅
 └── go.work                        ✅ (adicionar módulos novos em cada estágio)
 ```
 
@@ -266,22 +293,22 @@ research-api/
 
 | Métrica | Stage 01 Monolito | Stage 02 +Users | Stage 03 +Products | Stage 04 +Orders/Inv | Stage 05 Full µS |
 |---|---|---|---|---|---|
-| Throughput (req/s) | 2.327 | 1.793 | 1.964 | 1.620 | ⏳ |
-| P50 (ms) | 1,98 | 9,43 | 9,13 | 11,42 | ⏳ |
-| P90 (ms) | 6,92 | 102,05 | 58,83 | 163,34 | ⏳ |
-| P95 (ms) | 10,12 | 160,89 | 90,19 | 286,41 | ⏳ |
-| Máximo (ms) | 127,98 | 902,82 | 424,60 | 1.030,00 | ⏳ |
-| Taxa de erro | 0% | 0% | 0% | 0% | ⏳ |
-| Serviços ativos | 1 | 2 + nginx | 3 + nginx | 4 + nginx | ⏳ |
+| Throughput (req/s) | 2.327 | 1.793 | 1.964 | 1.620 | 1.769 |
+| P50 (ms) | 1,98 | 9,43 | 9,13 | 11,42 | 6,52 |
+| P90 (ms) | 6,92 | 102,05 | 58,83 | 163,34 | 97,98 |
+| P95 (ms) | 10,12 | 160,89 | 90,19 | 286,41 | 216,99 |
+| Máximo (ms) | 127,98 | 902,82 | 424,60 | 1.030,00 | 1.465,10 |
+| Taxa de erro | 0% | 0% | 0% | 0% | 0,21% |
+| Serviços ativos | 1 | 2 + nginx | 3 + nginx | 4 + nginx | 4 + nginx |
 
 ---
 
 ## Observações e Pendências
 
-- [ ] **CPU/Memory no Grafana** — filtro cAdvisor corrigido no dashboard, validar no Stage 03
-- [ ] **Jaeger/OTEL** — adicionar a partir do Stage 03 para medir latência inter-serviços
-- [ ] **Banco separado por serviço** — a partir do Stage 05 (cada serviço com seu schema)
-- [ ] **Screenshots Grafana** — capturar de cada estágio para usar como figuras no TCC
+- [x] **CPU/Memory no Grafana** — painéis atualizados para usar `process_resident_memory_bytes` e `rate(process_cpu_seconds_total[1m])` por job (cAdvisor v0.50.0 + Docker 29.2.1 incompatibilidade de API resolvida via process metrics)
+- [ ] **Jaeger/OTEL** — não implementado (escopo excluído do TCC)
+- [x] **Schema separado por serviço** — implementado no Stage 05 (schema-per-service no PostgreSQL compartilhado)
+- [ ] **Screenshots Grafana** — capturar de cada estágio para usar como figuras no TCC (CPU/mem agora visível)
 - [ ] **Análise estatística final** — estatística descritiva com todos os 5 estágios para a seção de Resultados
 
 ---

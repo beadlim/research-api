@@ -1,0 +1,229 @@
+{
+    "root_group": {
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
+        "checks": {
+                "get user 200": {
+                    "name": "get user 200",
+                    "path": "::get user 200",
+                    "id": "0093df631cfb97054784ab373495698c",
+                    "passes": 541513,
+                    "fails": 0
+                },
+                "list products 200": {
+                    "fails": 0,
+                    "name": "list products 200",
+                    "path": "::list products 200",
+                    "id": "534598a93231dc405e12ad4548b1638d",
+                    "passes": 361055
+                },
+                "create order 201": {
+                    "name": "create order 201",
+                    "path": "::create order 201",
+                    "id": "8cba04e3f5af90e19b46e96583e80215",
+                    "passes": 267607,
+                    "fails": 3857
+                },
+                "get inventory 200": {
+                    "fails": 0,
+                    "name": "get inventory 200",
+                    "path": "::get inventory 200",
+                    "id": "ea3b193c9cefdabf1b9ce7079e28e8cd",
+                    "passes": 180371
+                },
+                "inventory has product_id": {
+                    "path": "::inventory has product_id",
+                    "id": "7af1f05d9dd9cdf872fcc5a4140032a0",
+                    "passes": 180371,
+                    "fails": 0,
+                    "name": "inventory has product_id"
+                },
+                "get product 200": {
+                    "name": "get product 200",
+                    "path": "::get product 200",
+                    "id": "3148c4639c01cb27fe88b1b3ee624001",
+                    "passes": 270415,
+                    "fails": 0
+                },
+                "list orders 200": {
+                    "path": "::list orders 200",
+                    "id": "963e2d626ce020a3850f96afc15ece6e",
+                    "passes": 179992,
+                    "fails": 0,
+                    "name": "list orders 200"
+                }
+            }
+    },
+    "metrics": {
+        "http_req_duration{expected_response:true}": {
+            "max": 1465.095671,
+            "p(90)": 95.05421240000003,
+            "p(95)": 212.94894619999994,
+            "avg": 34.620665844191294,
+            "min": 0.404245,
+            "med": 6.492495
+        },
+        "iterations": {
+            "count": 1804810,
+            "rate": 1769.2634914131197
+        },
+        "vus": {
+            "value": 3,
+            "min": 2,
+            "max": 500
+        },
+        "data_received": {
+            "count": 2930623238,
+            "rate": 2872903.3538601305
+        },
+        "http_req_duration{scenario:default}": {
+            "min": 0.404245,
+            "med": 6.5189865000000005,
+            "max": 1465.095671,
+            "p(90)": 97.98704130000006,
+            "p(95)": 216.99172829999918,
+            "avg": 35.24150478874549,
+            "thresholds": {
+                "p(95)<500": false
+            }
+        },
+        "http_req_sending": {
+            "min": 0.003634,
+            "med": 0.018863,
+            "max": 81.381261,
+            "p(90)": 0.046856,
+            "p(95)": 0.1365353999999985,
+            "avg": 0.07781513916625618
+        },
+        "http_req_blocked": {
+            "avg": 0.01568419090405477,
+            "min": 0.001385,
+            "med": 0.006662,
+            "max": 58.954817,
+            "p(90)": 0.012537,
+            "p(95)": 0.015398
+        },
+        "checks": {
+            "fails": 3857,
+            "passes": 1981324,
+            "value": 0.9980571041129247
+        },
+        "http_req_connecting": {
+            "min": 0,
+            "med": 0,
+            "max": 37.836252,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0.0011403516070409517
+        },
+        "http_req_duration": {
+            "max": 1465.095671,
+            "p(90)": 97.97746210000003,
+            "p(95)": 216.98667964999981,
+            "avg": 35.240368266691085,
+            "min": 0.404245,
+            "med": 6.5185135
+        },
+        "http_req_receiving": {
+            "med": 0.0613595,
+            "max": 313.228535,
+            "p(90)": 0.168558,
+            "p(95)": 0.40159114999999757,
+            "avg": 0.2290637840902701,
+            "min": 0.00743
+        },
+        "data_sent": {
+            "count": 170118508,
+            "rate": 166767.95087464649
+        },
+        "vus_max": {
+            "value": 500,
+            "min": 500,
+            "max": 500
+        },
+        "iteration_duration": {
+            "p(90)": 200.99881,
+            "p(95)": 319.50604994999975,
+            "avg": 137.05311799866578,
+            "min": 100.549366,
+            "med": 108.15050600000001,
+            "max": 1568.368223
+        },
+        "http_req_waiting": {
+            "med": 6.295152,
+            "max": 1464.954133,
+            "p(90)": 97.0985162000002,
+            "p(95)": 216.26964214999975,
+            "avg": 34.93348934343754,
+            "min": 0.374217
+        },
+        "http_req_tls_handshaking": {
+            "p(95)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0
+        },
+        "http_req_failed": {
+            "fails": 1801013,
+            "passes": 3857,
+            "thresholds": {
+                "rate<0.01": false
+            },
+            "value": 0.0021369960163335863
+        },
+        "http_reqs": {
+            "rate": 1769.3223096873342,
+            "count": 1804870
+        }
+    },
+    "setup_data": {
+        "users": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21
+        ],
+        "products": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21
+        ]
+    }
+}
