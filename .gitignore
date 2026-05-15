@@ -3,3 +3,4 @@ stages/*/service
 *.test
 *.out
 results/**/raw.json
+.worktrees/
