@@ -315,11 +315,26 @@ research-api/
 
 ## Trabalhos Futuros (segunda rodada — pós resultados preliminares)
 
-- **Stage 06 — banco físico separado por serviço**: hoje o Stage 05 usa schema-per-service no mesmo servidor PostgreSQL. Banco físico separado por serviço isolaria ainda mais o I/O e mudaria o perfil de latência, permitindo comparar o custo de rede vs. ganho de isolamento real.
+- **Stage 06 — comunicação assíncrona via mensageria**: o Stage 04 demonstrou empiricamente que comunicação síncrona inter-serviços é o principal vetor de degradação de latência na migração — P95 saltou 218% não pela extração dos serviços em si, mas pelas 2 chamadas HTTP em cadeia por transação no `orders-service`. Um Stage 06 com mensageria (ex: Kafka, RabbitMQ) eliminaria o acoplamento temporal: `POST /orders` retornaria imediatamente após persistir o evento, e a validação de usuário/produto ocorreria de forma eventual. O tradeoff a avaliar é consistência eventual vs. imediata e a complexidade operacional da infraestrutura de mensagens.
+
+- **Stage 07 — banco físico separado por serviço**: após validar comunicação assíncrona no Stage 06, separar os bancos fisicamente isolaria I/O por serviço e permitiria comparar o custo de rede adicional vs. ganho de isolamento real em relação ao schema-per-service do Stage 05.
 
 - **Escalonamento horizontal**: rodar 2-3 réplicas do `orders-service` (gargalo identificado — maior CPU e latência por realizar 2 chamadas HTTP inter-serviços por `POST /orders`) com load balancing no NGINX, medindo o ganho de throughput e redução de P95.
 
 - **Análise estatística formal**: calcular desvio padrão e intervalos de confiança entre os 5 estágios para embasar as conclusões com rigor estatístico na seção de Resultados do TCC.
+
+### Motivação empírica para o Stage 06
+
+O achado central desta pesquisa é que **o padrão de comunicação entre serviços tem impacto mensurável maior que a própria topologia da arquitetura**. Os dados evidenciam isso:
+
+| Causa | Impacto no P95 |
+|---|---|
+| Introdução do NGINX (Stage 02) | +1.491% vs baseline |
+| Extração de mais serviços (Stage 03) | -44% vs Stage 02 — contenção reduzida compensa o hop |
+| 2 chamadas HTTP síncronas por transação (Stage 04) | +218% vs Stage 03 |
+| Isolamento de schema no banco (Stage 05) | -24% vs Stage 04 |
+
+A dependência síncrona do Stage 04 gerou mais degradação que todos os hops de rede anteriores somados. Isso transforma o trabalho de um benchmark de performance em uma análise de decisão arquitetural com evidência empírica — sustentando a recomendação de comunicação assíncrona para serviços com dependências em cadeia.
 
 ---
 
