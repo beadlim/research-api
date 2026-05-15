@@ -28,9 +28,9 @@
 | Módulo | Endpoints | Estágio de extração |
 |---|---|---|
 | Users | `POST /users` `GET /users` `GET /users/:id` | Stage 02 ✅ |
-| Products | `POST /products` `GET /products` `GET /products/:id` | Stage 03 |
-| Orders | `POST /orders` `GET /orders` `GET /orders/:id` | Stage 04 |
-| Inventory | `GET /inventory/:id` `PATCH /inventory/:id` | Stage 04 |
+| Products | `POST /products` `GET /products` `GET /products/:id` | Stage 03 ✅ |
+| Orders | `POST /orders` `GET /orders` `GET /orders/:id` | Stage 04 ✅ |
+| Inventory | `GET /inventory/:id` `PATCH /inventory/:id` | Stage 04 ✅ |
 
 ---
 
@@ -130,21 +130,33 @@ docker compose -f docker-compose.02-users-extracted.yml down
 
 ---
 
-### ⏳ Stage 03 — Products Service Extraído
+### ✅ Stage 03 — Products Service Extraído
 
-**O que fazer:**
-1. Criar `stages/03-products-extracted/products-service/` (Go)
-2. Criar `stages/03-products-extracted/monolith-partial/` (sem /users e /products)
-3. Criar `gateway/nginx/stage-03.conf`:
-   - `/users` → users-service
-   - `/products` → products-service
-   - resto → monolith-partial
-4. Criar `docker-compose.03-products-extracted.yml`
-5. Adicionar Jaeger para rastrear latência inter-serviços
-6. Criar `load-tests/k6/stage-03-products-extracted.js`
-7. Salvar em `results/stage-03/summary.json`
+**Arquitetura:**
+- NGINX gateway na porta 8080
+- `/users` → `users-service` (Go, porta 8081)
+- `/products` → `products-service` (Go, porta 8082)
+- todo o resto → `monolith-partial` (Go, porta 8080 interno)
+- Banco compartilhado (PostgreSQL único)
 
-**Como rodar (quando implementado):**
+**Arquivo:** `docker-compose.03-products-extracted.yml`  
+**NGINX config:** `gateway/nginx/stage-03.conf`  
+**k6:** `load-tests/k6/stage-03-products-extracted.js`  
+**Resultados:** `results/stage-03/summary.json`
+
+| Métrica | Resultado | vs Stage 02 | vs Baseline |
+|---|---|---|---|
+| Throughput | 1.964 req/s | +10% | -16% |
+| P50 | 9,13 ms | -3% | +361% |
+| P90 | 58,83 ms | -42% | +750% |
+| P95 | 90,19 ms | -44% | +791% |
+| Máximo | 424,60 ms | -53% | +232% |
+| Taxa de erro | 0% | = | = |
+| Total requisições | 2.003.676 | — | — |
+
+**Observação:** extração do products-service *melhorou* P95 em relação ao stage-02 (90ms vs 161ms). Monolito menor reduz contenção no connection pool do PostgreSQL.
+
+**Como rodar:**
 ```bash
 docker compose -f docker-compose.03-products-extracted.yml up --build -d
 k6 run --summary-export results/stage-03/summary.json load-tests/k6/stage-03-products-extracted.js
@@ -153,17 +165,40 @@ docker compose -f docker-compose.03-products-extracted.yml down
 
 ---
 
-### ⏳ Stage 04 — Orders + Inventory Extraídos
+### ✅ Stage 04 — Orders + Inventory Extraídos
 
-**O que fazer:**
-1. Criar `orders-service` e `inventory-service` em Go
-2. `orders-service` precisará chamar `users-service` e `products-service` via HTTP (comunicação inter-serviços)
-3. Atualizar NGINX para rotear `/orders` e `/inventory`
-4. Instrumentar com OpenTelemetry para medir overhead de chamadas entre serviços
-5. Criar `docker-compose.04-orders-inventory-extracted.yml`
-6. Salvar em `results/stage-04/summary.json`
+**Arquitetura:**
+- NGINX gateway na porta 8080
+- `/users` → `users-service` (Go, porta 8081)
+- `/products` → `products-service` (Go, porta 8082)
+- `/orders` → `orders-service` (Go, porta 8083)
+- `/inventory` → `inventory-service` (Go, porta 8084)
+- Banco compartilhado (PostgreSQL único)
+- `POST /orders` realiza 2 chamadas HTTP inter-serviços: users-service (validação) + products-service (preço)
 
-> ⚠️ Neste estágio o `POST /orders` envolverá chamadas HTTP entre serviços (vs. chamadas internas no monolito) — espera-se aumento significativo de latência neste endpoint específico.
+**Arquivo:** `docker-compose.04-orders-inventory.yml`  
+**NGINX config:** `gateway/nginx/stage-04.conf`  
+**k6:** `load-tests/k6/stage-04-orders-inventory.js`  
+**Resultados:** `results/stage-04/summary.json`
+
+| Métrica | Resultado | vs Stage 03 | vs Baseline |
+|---|---|---|---|
+| Throughput | 1.620 req/s | -18% | -30% |
+| P50 | 11,42 ms | +25% | +477% |
+| P90 | 163,34 ms | +178% | +2.261% |
+| P95 | 286,41 ms | +218% | +2.731% |
+| Máximo | 1.030,00 ms | +143% | +705% |
+| Taxa de erro | 0% | = | = |
+| Total requisições | 1.652.836 | — | — |
+
+**Observação:** P95 sobe 218% em relação ao stage-03, confirmando o overhead de comunicação inter-serviços no `POST /orders` (2 chamadas HTTP síncronas adicionais por transação). Throughput cai 18% por maior tempo de processamento por requisição.
+
+**Como rodar:**
+```bash
+docker compose -f docker-compose.04-orders-inventory.yml up --build -d
+k6 run --summary-export results/stage-04/summary.json load-tests/k6/stage-04-orders-inventory.js
+docker compose -f docker-compose.04-orders-inventory.yml down
+```
 
 ---
 
@@ -187,20 +222,20 @@ research-api/
 │   ├── 02-users-extracted/        ✅ users-service + monolith-partial
 │   │   ├── users-service/
 │   │   └── monolith-partial/
-│   ├── 03-products-extracted/     ⏳ a implementar
-│   ├── 04-orders-inventory/       ⏳ a implementar
+│   ├── 03-products-extracted/     ✅ products-service + monolith-partial
+│   ├── 04-orders-inventory/       ✅ orders-service + inventory-service
 │   └── 05-full-microservices/     ⏳ a implementar
 ├── gateway/
 │   └── nginx/
 │       ├── stage-02.conf          ✅
-│       ├── stage-03.conf          ⏳
-│       ├── stage-04.conf          ⏳
+│       ├── stage-03.conf          ✅
+│       ├── stage-04.conf          ✅
 │       └── stage-05.conf          ⏳
 ├── load-tests/k6/
 │   ├── baseline.js                ✅
 │   ├── stage-02-users-extracted.js ✅
-│   ├── stage-03-products-extracted.js ⏳
-│   ├── stage-04-orders-inventory.js   ⏳
+│   ├── stage-03-products-extracted.js ✅
+│   ├── stage-04-orders-inventory.js   ✅
 │   └── stage-05-full-microservices.js ⏳
 ├── observability/
 │   ├── prometheus/
@@ -214,13 +249,13 @@ research-api/
 ├── results/
 │   ├── baseline/summary.json      ✅
 │   ├── stage-02/summary.json      ✅
-│   ├── stage-03/summary.json      ⏳
-│   ├── stage-04/summary.json      ⏳
+│   ├── stage-03/summary.json      ✅
+│   ├── stage-04/summary.json      ✅
 │   └── stage-05/summary.json      ⏳
 ├── docker-compose.01-monolith.yml          ✅
 ├── docker-compose.02-users-extracted.yml   ✅
-├── docker-compose.03-products-extracted.yml ⏳
-├── docker-compose.04-orders-inventory.yml   ⏳
+├── docker-compose.03-products-extracted.yml ✅
+├── docker-compose.04-orders-inventory.yml   ✅
 ├── docker-compose.05-full-microservices.yml ⏳
 └── go.work                        ✅ (adicionar módulos novos em cada estágio)
 ```
@@ -231,13 +266,13 @@ research-api/
 
 | Métrica | Stage 01 Monolito | Stage 02 +Users | Stage 03 +Products | Stage 04 +Orders/Inv | Stage 05 Full µS |
 |---|---|---|---|---|---|
-| Throughput (req/s) | 2.327 | 1.793 | ⏳ | ⏳ | ⏳ |
-| P50 (ms) | 1,98 | 9,43 | ⏳ | ⏳ | ⏳ |
-| P90 (ms) | 6,92 | 102,05 | ⏳ | ⏳ | ⏳ |
-| P95 (ms) | 10,12 | 160,89 | ⏳ | ⏳ | ⏳ |
-| Máximo (ms) | 127,98 | 902,82 | ⏳ | ⏳ | ⏳ |
-| Taxa de erro | 0% | 0% | ⏳ | ⏳ | ⏳ |
-| Serviços ativos | 1 | 2 + nginx | ⏳ | ⏳ | ⏳ |
+| Throughput (req/s) | 2.327 | 1.793 | 1.964 | 1.620 | ⏳ |
+| P50 (ms) | 1,98 | 9,43 | 9,13 | 11,42 | ⏳ |
+| P90 (ms) | 6,92 | 102,05 | 58,83 | 163,34 | ⏳ |
+| P95 (ms) | 10,12 | 160,89 | 90,19 | 286,41 | ⏳ |
+| Máximo (ms) | 127,98 | 902,82 | 424,60 | 1.030,00 | ⏳ |
+| Taxa de erro | 0% | 0% | 0% | 0% | ⏳ |
+| Serviços ativos | 1 | 2 + nginx | 3 + nginx | 4 + nginx | ⏳ |
 
 ---
 

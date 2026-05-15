@@ -5,6 +5,7 @@ import { check, sleep } from 'k6';
 // /users → users-service | resto → monolith-partial
 const BASE_URL = __ENV.BASE_URL || 'http://localhost:8080';
 const HEADERS = { 'Content-Type': 'application/json' };
+const RUN_ID = Date.now();
 
 export const options = {
   stages: [
@@ -28,7 +29,7 @@ export function setup() {
 
   for (let i = 0; i < 20; i++) {
     const res = http.post(`${BASE_URL}/users`,
-      JSON.stringify({ name: `User ${i}`, email: `user${i}@k6stage02.com` }),
+      JSON.stringify({ name: `User ${i}`, email: `user${i}@k6-${RUN_ID}.com` }),
       { headers: HEADERS },
     );
     if (res.status === 201) users.push(res.json('id'));

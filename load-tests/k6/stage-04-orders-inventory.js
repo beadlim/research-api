@@ -1,7 +1,8 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 
-// Stage 03: NGINX roteia /users → users-service, /products → products-service, resto → monolith-partial
+// Stage 04: microsserviços completos — monolito removido
+// POST /orders envolve 2 chamadas HTTP inter-serviços (users + products)
 const BASE_URL = __ENV.BASE_URL || 'http://localhost:8080';
 const HEADERS = { 'Content-Type': 'application/json' };
 const RUN_ID = Date.now();
@@ -49,24 +50,22 @@ export default function ({ users, products }) {
   const r = Math.random();
 
   if (r < 0.30) {
-    // GET user — NGINX → users-service
     const id = users[Math.floor(Math.random() * users.length)];
     const res = http.get(`${BASE_URL}/users/${id}`);
     check(res, { 'get user 200': (r) => r.status === 200 });
 
   } else if (r < 0.50) {
-    // LIST products — NGINX → products-service
     const res = http.get(`${BASE_URL}/products`);
     check(res, { 'list products 200': (r) => r.status === 200 });
 
   } else if (r < 0.65) {
-    // GET product — NGINX → products-service
     const id = products[Math.floor(Math.random() * products.length)];
     const res = http.get(`${BASE_URL}/products/${id}`);
     check(res, { 'get product 200': (r) => r.status === 200 });
 
   } else if (r < 0.80) {
-    // POST order — NGINX → monolith-partial (consulta DB direto, sem HTTP inter-serviços)
+    // POST /orders → orders-service → HTTP call users-service + HTTP call products-service
+    // Este é o cenário que evidencia o overhead de comunicação inter-serviços
     const userId    = users[Math.floor(Math.random() * users.length)];
     const productId = products[Math.floor(Math.random() * products.length)];
     const res = http.post(`${BASE_URL}/orders`,
@@ -76,12 +75,10 @@ export default function ({ users, products }) {
     check(res, { 'create order 201': (r) => r.status === 201 });
 
   } else if (r < 0.90) {
-    // LIST orders — NGINX → monolith-partial
     const res = http.get(`${BASE_URL}/orders`);
     check(res, { 'list orders 200': (r) => r.status === 200 });
 
   } else {
-    // GET inventory — NGINX → monolith-partial
     const id = products[Math.floor(Math.random() * products.length)];
     const res = http.get(`${BASE_URL}/inventory/${id}`);
     check(res, { 'get inventory 200': (r) => r.status === 200 });

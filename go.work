@@ -6,4 +6,6 @@ use (
 	./stages/02-users-extracted/users-service
 	./stages/03-products-extracted/monolith-partial
 	./stages/03-products-extracted/products-service
+	./stages/04-orders-inventory/inventory-service
+	./stages/04-orders-inventory/orders-service
 )
