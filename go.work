@@ -8,4 +8,8 @@ use (
 	./stages/03-products-extracted/products-service
 	./stages/04-orders-inventory/inventory-service
 	./stages/04-orders-inventory/orders-service
+	./stages/05-full-microservices/users-service
+	./stages/05-full-microservices/products-service
+	./stages/05-full-microservices/orders-service
+	./stages/05-full-microservices/inventory-service
 )
