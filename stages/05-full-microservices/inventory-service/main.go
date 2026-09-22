@@ -33,6 +33,9 @@ func main() {
 		log.Fatalf("db migrate: %v", err)
 	}
 
+	// expõe estatísticas do pool de conexões para evidenciar contenção no banco
+	middleware.RegisterPoolCollector("inventory-service", pool)
+
 	r := chi.NewRouter()
 	r.Use(chimiddleware.Recoverer)
 	r.Use(middleware.PrometheusMetrics("inventory-service"))

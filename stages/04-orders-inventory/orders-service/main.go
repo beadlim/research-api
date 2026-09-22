@@ -45,6 +45,9 @@ func main() {
 	usersClient := clients.NewUsersClient(usersURL)
 	productsClient := clients.NewProductsClient(productsURL)
 
+	// expõe estatísticas do pool de conexões para evidenciar contenção no banco
+	middleware.RegisterPoolCollector("orders-service", pool)
+
 	r := chi.NewRouter()
 	r.Use(chimiddleware.Recoverer)
 	r.Use(middleware.PrometheusMetrics("orders-service"))
