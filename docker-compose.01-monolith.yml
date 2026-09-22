@@ -31,17 +31,20 @@ services:
     ports:
       - "9090:9090"
     volumes:
+      - prometheus_data_01:/prometheus
       - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.path=/prometheus"
       - "--web.enable-lifecycle"
+      - "--web.enable-admin-api"
+      - "--storage.tsdb.retention.time=30d"
     restart: unless-stopped
 
   grafana:
     image: grafana/grafana:10.4.2
     ports:
-      - "3000:3000"
+      - "${GRAFANA_PORT:-3000}:3000"
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
@@ -55,18 +58,30 @@ services:
     restart: unless-stopped
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.50.0
+    # Configuracao necessaria para o cAdvisor enxergar os containers em hosts
+    # com cgroups v2 e Docker recente; sem privileged e sem o cgroupfs montado
+    # ele so reporta o cgroup raiz.
+    image: gcr.io/cadvisor/cadvisor:v0.52.1
     ports:
       - "8082:8080"
+    privileged: true
+    cgroup: host
+    devices:
+      - /dev/kmsg
     volumes:
       - /:/rootfs:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run:/var/run:ro
       - /sys:/sys:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     command:
+      - "--housekeeping_interval=10s"
       - "--docker_only=true"
     restart: unless-stopped
 
 volumes:
+  prometheus_data_01:
   postgres_data:
   grafana_data:
