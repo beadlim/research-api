@@ -1,5 +1,6 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
+import { options as loadProfile, tagged } from './lib/profile.js';
 
 // Stage 05: microsserviços completos com schema-per-service
 // Cada serviço usa seu próprio schema PostgreSQL (users_schema, products_schema, orders_schema, inventory_schema)
@@ -8,21 +9,7 @@ const BASE_URL = __ENV.BASE_URL || 'http://localhost:8080';
 const HEADERS = { 'Content-Type': 'application/json' };
 const RUN_ID = Date.now();
 
-export const options = {
-  stages: [
-    { duration: '30s', target: 50  },
-    { duration: '5m',  target: 50  },
-    { duration: '30s', target: 200 },
-    { duration: '5m',  target: 200 },
-    { duration: '30s', target: 500 },
-    { duration: '5m',  target: 500 },
-    { duration: '30s', target: 0   },
-  ],
-  thresholds: {
-    'http_req_duration{scenario:default}': ['p(95)<500'],
-    'http_req_failed':                     ['rate<0.01'],
-  },
-};
+export const options = loadProfile;
 
 export function setup() {
   const users = [];
@@ -52,6 +39,15 @@ export function setup() {
       );
     }
   }
+  // Sem este guarda, um banco nao reiniciado faz o setup falhar em silencio
+  // (e-mails duplicados), o teste roda com identificadores indefinidos e toda a
+  // execucao e descartavel sem que isso apareca no sumario.
+  if (users.length === 0 || products.length === 0) {
+    throw new Error(
+      `setup falhou: ${users.length} usuarios e ${products.length} produtos criados. ` +
+        'Reinicie o banco antes do teste (scripts/run-stage.sh ja faz isso).',
+    );
+  }
 
   return { users, products };
 }
@@ -61,16 +57,16 @@ export default function ({ users, products }) {
 
   if (r < 0.30) {
     const id = users[Math.floor(Math.random() * users.length)];
-    const res = http.get(`${BASE_URL}/users/${id}`);
+    const res = http.get(`${BASE_URL}/users/${id}`, tagged('get_user'));
     check(res, { 'get user 200': (r) => r.status === 200 });
 
   } else if (r < 0.50) {
-    const res = http.get(`${BASE_URL}/products`);
+    const res = http.get(`${BASE_URL}/products`, tagged('list_products'));
     check(res, { 'list products 200': (r) => r.status === 200 });
 
   } else if (r < 0.65) {
     const id = products[Math.floor(Math.random() * products.length)];
-    const res = http.get(`${BASE_URL}/products/${id}`);
+    const res = http.get(`${BASE_URL}/products/${id}`, tagged('get_product'));
     check(res, { 'get product 200': (r) => r.status === 200 });
 
   } else if (r < 0.80) {
@@ -79,17 +75,17 @@ export default function ({ users, products }) {
     const productId = products[Math.floor(Math.random() * products.length)];
     const res = http.post(`${BASE_URL}/orders`,
       JSON.stringify({ user_id: userId, items: [{ product_id: productId, quantity: 1 }] }),
-      { headers: HEADERS },
+      tagged('post_order', { headers: HEADERS }),
     );
     check(res, { 'create order 201': (r) => r.status === 201 });
 
   } else if (r < 0.90) {
-    const res = http.get(`${BASE_URL}/orders`);
+    const res = http.get(`${BASE_URL}/orders`, tagged('list_orders'));
     check(res, { 'list orders 200': (r) => r.status === 200 });
 
   } else {
     const id = products[Math.floor(Math.random() * products.length)];
-    const res = http.get(`${BASE_URL}/inventory/${id}`);
+    const res = http.get(`${BASE_URL}/inventory/${id}`, tagged('get_inventory'));
     check(res, {
       'get inventory 200':        (r) => r.status === 200,
       'inventory has product_id': (r) => r.json('product_id') > 0,
