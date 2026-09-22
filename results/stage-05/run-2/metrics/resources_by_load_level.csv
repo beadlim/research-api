@@ -1,0 +1,205 @@
+stage,run,metric,unit,target,load_level,samples,mean,p95,max
+05,2,process_cpu_percent,percentual de um nucleo,cadvisor,low,30,0.227,0.26,0.3
+05,2,process_cpu_percent,percentual de um nucleo,cadvisor,medium,30,0.179,0.231,0.24
+05,2,process_cpu_percent,percentual de um nucleo,cadvisor,high,30,0.215,0.26,0.28
+05,2,process_cpu_percent,percentual de um nucleo,inventory-service,low,30,3.647,4.0,4.06
+05,2,process_cpu_percent,percentual de um nucleo,inventory-service,medium,30,10.459,11.231,11.26
+05,2,process_cpu_percent,percentual de um nucleo,inventory-service,high,30,17.452,18.521,18.54
+05,2,process_cpu_percent,percentual de um nucleo,prometheus,low,30,0.246,0.322,0.801
+05,2,process_cpu_percent,percentual de um nucleo,prometheus,medium,30,0.153,0.18,0.2
+05,2,process_cpu_percent,percentual de um nucleo,prometheus,high,30,0.189,0.231,0.24
+05,2,process_cpu_percent,percentual de um nucleo,orders-service,low,30,29.347,33.089,33.26
+05,2,process_cpu_percent,percentual de um nucleo,orders-service,medium,30,105.975,125.615,126.64
+05,2,process_cpu_percent,percentual de um nucleo,orders-service,high,30,405.512,478.093,482.531
+05,2,process_cpu_percent,percentual de um nucleo,products-service,low,30,14.79,16.262,16.28
+05,2,process_cpu_percent,percentual de um nucleo,products-service,medium,30,40.675,43.211,43.32
+05,2,process_cpu_percent,percentual de um nucleo,products-service,high,30,68.259,72.939,74.12
+05,2,process_cpu_percent,percentual de um nucleo,users-service,low,30,14.735,16.202,16.24
+05,2,process_cpu_percent,percentual de um nucleo,users-service,medium,30,39.993,42.911,43.06
+05,2,process_cpu_percent,percentual de um nucleo,users-service,high,30,60.754,65.421,68.1
+05,2,process_memory_mb,MB,cadvisor,low,30,41.337,42.465,42.59
+05,2,process_memory_mb,MB,cadvisor,medium,30,42.373,44.02,44.43
+05,2,process_memory_mb,MB,cadvisor,high,30,43.06,44.418,44.418
+05,2,process_memory_mb,MB,inventory-service,low,30,18.133,19.283,19.422
+05,2,process_memory_mb,MB,inventory-service,medium,30,19.441,19.971,20.031
+05,2,process_memory_mb,MB,inventory-service,high,30,21.528,22.075,22.453
+05,2,process_memory_mb,MB,prometheus,low,30,86.255,89.988,89.988
+05,2,process_memory_mb,MB,prometheus,medium,30,92.484,93.113,93.113
+05,2,process_memory_mb,MB,prometheus,high,30,92.684,93.363,93.363
+05,2,process_memory_mb,MB,orders-service,low,30,21.375,22.415,22.605
+05,2,process_memory_mb,MB,orders-service,medium,30,23.642,24.271,24.293
+05,2,process_memory_mb,MB,orders-service,high,30,44.621,50.196,51.91
+05,2,process_memory_mb,MB,products-service,low,30,20.946,22.042,22.113
+05,2,process_memory_mb,MB,products-service,medium,30,22.808,23.35,23.402
+05,2,process_memory_mb,MB,products-service,high,30,27.264,28.081,28.754
+05,2,process_memory_mb,MB,users-service,low,30,20.068,21.02,21.164
+05,2,process_memory_mb,MB,users-service,medium,30,21.546,21.945,22.027
+05,2,process_memory_mb,MB,users-service,high,30,26.362,27.655,28.32
+05,2,goroutines,goroutines,cadvisor,low,30,26.9,28.0,28.0
+05,2,goroutines,goroutines,cadvisor,medium,30,27.167,28.0,28.0
+05,2,goroutines,goroutines,cadvisor,high,30,26.467,27.55,28.0
+05,2,goroutines,goroutines,inventory-service,low,30,25.6,31.55,32.0
+05,2,goroutines,goroutines,inventory-service,medium,30,39.7,42.0,43.0
+05,2,goroutines,goroutines,inventory-service,high,30,75.267,82.55,86.0
+05,2,goroutines,goroutines,prometheus,low,30,45.033,45.0,46.0
+05,2,goroutines,goroutines,prometheus,medium,30,45.1,45.55,47.0
+05,2,goroutines,goroutines,prometheus,high,30,45.1,46.0,46.0
+05,2,goroutines,goroutines,orders-service,low,30,43.367,56.3,61.0
+05,2,goroutines,goroutines,orders-service,medium,30,72.6,83.3,88.0
+05,2,goroutines,goroutines,orders-service,high,30,543.533,808.85,832.0
+05,2,goroutines,goroutines,products-service,low,30,34.7,41.0,45.0
+05,2,goroutines,goroutines,products-service,medium,30,54.267,59.65,65.0
+05,2,goroutines,goroutines,products-service,high,30,167.767,205.2,208.0
+05,2,goroutines,goroutines,users-service,low,30,30.933,40.0,41.0
+05,2,goroutines,goroutines,users-service,medium,30,50.167,56.0,57.0
+05,2,goroutines,goroutines,users-service,high,30,147.1,180.2,241.0
+05,2,heap_alloc_mb,MB,cadvisor,low,30,6.709,8.415,8.748
+05,2,heap_alloc_mb,MB,cadvisor,medium,30,6.711,8.197,8.715
+05,2,heap_alloc_mb,MB,cadvisor,high,30,7.057,8.699,10.292
+05,2,heap_alloc_mb,MB,inventory-service,low,30,2.47,3.209,3.421
+05,2,heap_alloc_mb,MB,inventory-service,medium,30,2.189,3.065,3.09
+05,2,heap_alloc_mb,MB,inventory-service,high,30,2.68,3.363,3.608
+05,2,heap_alloc_mb,MB,prometheus,low,30,23.617,28.229,28.816
+05,2,heap_alloc_mb,MB,prometheus,medium,30,26.541,30.314,30.792
+05,2,heap_alloc_mb,MB,prometheus,high,30,26.322,28.725,29.148
+05,2,heap_alloc_mb,MB,orders-service,low,30,2.428,2.84,2.877
+05,2,heap_alloc_mb,MB,orders-service,medium,30,2.882,3.309,3.526
+05,2,heap_alloc_mb,MB,orders-service,high,30,10.319,13.441,14.801
+05,2,heap_alloc_mb,MB,products-service,low,30,2.831,3.649,3.809
+05,2,heap_alloc_mb,MB,products-service,medium,30,3.336,4.403,4.569
+05,2,heap_alloc_mb,MB,products-service,high,30,4.857,5.691,5.793
+05,2,heap_alloc_mb,MB,users-service,low,30,2.36,2.921,3.297
+05,2,heap_alloc_mb,MB,users-service,medium,30,2.694,3.395,3.453
+05,2,heap_alloc_mb,MB,users-service,high,30,4.317,6.039,6.498
+05,2,gc_pause_ms,ms,cadvisor,low,30,0.301,0.887,1.276
+05,2,gc_pause_ms,ms,cadvisor,medium,30,0.171,0.344,0.386
+05,2,gc_pause_ms,ms,cadvisor,high,30,0.683,1.725,1.922
+05,2,gc_pause_ms,ms,inventory-service,low,30,0.207,0.339,0.358
+05,2,gc_pause_ms,ms,inventory-service,medium,30,0.165,0.215,0.236
+05,2,gc_pause_ms,ms,inventory-service,high,30,1.524,2.548,2.816
+05,2,gc_pause_ms,ms,prometheus,low,30,0.057,0.111,0.14
+05,2,gc_pause_ms,ms,prometheus,medium,30,0.036,0.11,0.112
+05,2,gc_pause_ms,ms,prometheus,high,30,0.056,0.243,0.243
+05,2,gc_pause_ms,ms,orders-service,low,30,0.359,0.426,0.435
+05,2,gc_pause_ms,ms,orders-service,medium,30,0.336,0.363,0.383
+05,2,gc_pause_ms,ms,orders-service,high,30,5.172,6.742,6.911
+05,2,gc_pause_ms,ms,products-service,low,30,0.331,0.409,0.421
+05,2,gc_pause_ms,ms,products-service,medium,30,0.293,0.344,0.353
+05,2,gc_pause_ms,ms,products-service,high,30,2.328,3.188,3.328
+05,2,gc_pause_ms,ms,users-service,low,30,0.33,0.49,0.531
+05,2,gc_pause_ms,ms,users-service,medium,30,0.321,0.37,0.38
+05,2,gc_pause_ms,ms,users-service,high,30,2.178,2.824,2.838
+05,2,pool_acquired_conns,conexoes,inventory-service,low,30,0.0,0.0,0.0
+05,2,pool_acquired_conns,conexoes,inventory-service,medium,30,0.067,0.55,1.0
+05,2,pool_acquired_conns,conexoes,inventory-service,high,30,0.567,3.2,6.0
+05,2,pool_acquired_conns,conexoes,orders-service,low,30,0.5,2.55,4.0
+05,2,pool_acquired_conns,conexoes,orders-service,medium,30,1.133,3.55,5.0
+05,2,pool_acquired_conns,conexoes,orders-service,high,30,7.533,10.0,10.0
+05,2,pool_acquired_conns,conexoes,products-service,low,30,0.233,1.55,2.0
+05,2,pool_acquired_conns,conexoes,products-service,medium,30,0.3,1.55,2.0
+05,2,pool_acquired_conns,conexoes,products-service,high,30,3.133,9.55,10.0
+05,2,pool_acquired_conns,conexoes,users-service,low,30,0.133,1.0,2.0
+05,2,pool_acquired_conns,conexoes,users-service,medium,30,0.333,1.0,3.0
+05,2,pool_acquired_conns,conexoes,users-service,high,30,3.0,9.55,10.0
+05,2,pool_idle_conns,conexoes,inventory-service,low,30,4.4,5.0,5.0
+05,2,pool_idle_conns,conexoes,inventory-service,medium,30,6.433,7.0,7.0
+05,2,pool_idle_conns,conexoes,inventory-service,high,30,9.4,10.0,10.0
+05,2,pool_idle_conns,conexoes,orders-service,low,30,9.067,10.0,10.0
+05,2,pool_idle_conns,conexoes,orders-service,medium,30,8.867,10.0,10.0
+05,2,pool_idle_conns,conexoes,orders-service,high,30,2.467,9.1,10.0
+05,2,pool_idle_conns,conexoes,products-service,low,30,9.267,10.0,10.0
+05,2,pool_idle_conns,conexoes,products-service,medium,30,9.7,10.0,10.0
+05,2,pool_idle_conns,conexoes,products-service,high,30,6.867,10.0,10.0
+05,2,pool_idle_conns,conexoes,users-service,low,30,9.567,10.0,10.0
+05,2,pool_idle_conns,conexoes,users-service,medium,30,9.667,10.0,10.0
+05,2,pool_idle_conns,conexoes,users-service,high,30,7.0,10.0,10.0
+05,2,pool_total_conns,conexoes,inventory-service,low,30,4.4,5.0,5.0
+05,2,pool_total_conns,conexoes,inventory-service,medium,30,6.5,7.0,7.0
+05,2,pool_total_conns,conexoes,inventory-service,high,30,9.967,10.0,10.0
+05,2,pool_total_conns,conexoes,orders-service,low,30,9.567,10.0,10.0
+05,2,pool_total_conns,conexoes,orders-service,medium,30,10.0,10.0,10.0
+05,2,pool_total_conns,conexoes,orders-service,high,30,10.0,10.0,10.0
+05,2,pool_total_conns,conexoes,products-service,low,30,9.5,10.0,10.0
+05,2,pool_total_conns,conexoes,products-service,medium,30,10.0,10.0,10.0
+05,2,pool_total_conns,conexoes,products-service,high,30,10.0,10.0,10.0
+05,2,pool_total_conns,conexoes,users-service,low,30,9.7,10.0,10.0
+05,2,pool_total_conns,conexoes,users-service,medium,30,10.0,10.0,10.0
+05,2,pool_total_conns,conexoes,users-service,high,30,10.0,10.0,10.0
+05,2,pool_wait_per_acquire_ms,ms,inventory-service,low,30,0.007,0.024,0.046
+05,2,pool_wait_per_acquire_ms,ms,inventory-service,medium,30,0.002,0.003,0.003
+05,2,pool_wait_per_acquire_ms,ms,inventory-service,high,30,0.01,0.019,0.019
+05,2,pool_wait_per_acquire_ms,ms,orders-service,low,30,0.007,0.027,0.045
+05,2,pool_wait_per_acquire_ms,ms,orders-service,medium,30,0.004,0.006,0.007
+05,2,pool_wait_per_acquire_ms,ms,orders-service,high,30,43.501,56.346,59.607
+05,2,pool_wait_per_acquire_ms,ms,products-service,low,30,0.004,0.015,0.024
+05,2,pool_wait_per_acquire_ms,ms,products-service,medium,30,0.001,0.002,0.002
+05,2,pool_wait_per_acquire_ms,ms,products-service,high,30,0.337,0.419,0.437
+05,2,pool_wait_per_acquire_ms,ms,users-service,low,30,0.005,0.017,0.02
+05,2,pool_wait_per_acquire_ms,ms,users-service,medium,30,0.002,0.002,0.002
+05,2,pool_wait_per_acquire_ms,ms,users-service,high,30,0.39,0.538,0.558
+05,2,pool_empty_acquire_per_s,por segundo,inventory-service,low,30,0.013,0.052,0.06
+05,2,pool_empty_acquire_per_s,por segundo,inventory-service,medium,30,0.007,0.02,0.02
+05,2,pool_empty_acquire_per_s,por segundo,inventory-service,high,30,1.86,3.142,3.28
+05,2,pool_empty_acquire_per_s,por segundo,orders-service,low,30,0.03,0.127,0.16
+05,2,pool_empty_acquire_per_s,por segundo,orders-service,medium,30,0.527,0.862,0.92
+05,2,pool_empty_acquire_per_s,por segundo,orders-service,high,30,594.693,709.863,717.803
+05,2,pool_empty_acquire_per_s,por segundo,products-service,low,30,0.029,0.131,0.14
+05,2,pool_empty_acquire_per_s,por segundo,products-service,medium,30,0.213,0.36,0.4
+05,2,pool_empty_acquire_per_s,por segundo,products-service,high,30,220.431,258.891,267.1
+05,2,pool_empty_acquire_per_s,por segundo,users-service,low,30,0.029,0.162,0.18
+05,2,pool_empty_acquire_per_s,por segundo,users-service,medium,30,0.107,0.24,0.28
+05,2,pool_empty_acquire_per_s,por segundo,users-service,high,30,191.92,236.681,238.48
+05,2,cpu_percent,percentual de um nucleo,nginx,low,60,13.955,15.247,16.82
+05,2,cpu_percent,percentual de um nucleo,nginx,medium,60,47.392,50.431,51.07
+05,2,cpu_percent,percentual de um nucleo,nginx,high,60,76.529,101.198,107.43
+05,2,memory_mb,MB,nginx,low,60,14.666,15.511,15.82
+05,2,memory_mb,MB,nginx,medium,60,16.056,16.591,16.68
+05,2,memory_mb,MB,nginx,high,60,21.274,23.179,24.14
+05,2,cpu_percent,percentual de um nucleo,orders-service,low,60,33.009,40.01,40.89
+05,2,cpu_percent,percentual de um nucleo,orders-service,medium,60,117.234,210.335,223.04
+05,2,cpu_percent,percentual de um nucleo,orders-service,high,60,439.843,789.863,875.2
+05,2,memory_mb,MB,orders-service,low,60,15.571,17.181,18.62
+05,2,memory_mb,MB,orders-service,medium,60,20.928,22.236,22.43
+05,2,memory_mb,MB,orders-service,high,60,49.97,55.403,56.79
+05,2,cpu_percent,percentual de um nucleo,grafana,low,60,0.055,0.09,0.13
+05,2,cpu_percent,percentual de um nucleo,grafana,medium,60,0.048,0.08,0.08
+05,2,cpu_percent,percentual de um nucleo,grafana,high,60,0.054,0.09,0.09
+05,2,memory_mb,MB,grafana,low,60,45.109,46.02,46.02
+05,2,memory_mb,MB,grafana,medium,60,43.861,43.98,43.98
+05,2,memory_mb,MB,grafana,high,60,43.433,43.45,43.64
+05,2,cpu_percent,percentual de um nucleo,products-service,low,60,16.546,18.997,20.1
+05,2,cpu_percent,percentual de um nucleo,products-service,medium,60,44.641,48.073,49.88
+05,2,cpu_percent,percentual de um nucleo,products-service,high,60,72.456,93.878,101.26
+05,2,memory_mb,MB,products-service,low,60,13.458,14.643,15.99
+05,2,memory_mb,MB,products-service,medium,60,15.35,16.642,17.34
+05,2,memory_mb,MB,products-service,high,60,20.545,21.743,22.23
+05,2,cpu_percent,percentual de um nucleo,users-service,low,60,16.328,18.22,18.52
+05,2,cpu_percent,percentual de um nucleo,users-service,medium,60,44.109,47.88,49.71
+05,2,cpu_percent,percentual de um nucleo,users-service,high,60,62.83,85.606,90.41
+05,2,memory_mb,MB,users-service,low,60,12.565,13.756,14.06
+05,2,memory_mb,MB,users-service,medium,60,13.954,14.762,15.1
+05,2,memory_mb,MB,users-service,high,60,19.81,21.745,23.96
+05,2,cpu_percent,percentual de um nucleo,inventory-service,low,60,3.817,4.715,4.87
+05,2,cpu_percent,percentual de um nucleo,inventory-service,medium,60,11.548,13.293,13.81
+05,2,cpu_percent,percentual de um nucleo,inventory-service,high,60,17.532,23.076,23.83
+05,2,memory_mb,MB,inventory-service,low,60,10.02,11.379,11.84
+05,2,memory_mb,MB,inventory-service,medium,60,11.866,13.021,13.34
+05,2,memory_mb,MB,inventory-service,high,60,14.337,15.271,16.34
+05,2,cpu_percent,percentual de um nucleo,postgres,low,60,23.766,26.842,29.79
+05,2,cpu_percent,percentual de um nucleo,postgres,medium,60,66.484,71.466,74.3
+05,2,cpu_percent,percentual de um nucleo,postgres,high,60,122.406,171.294,178.37
+05,2,memory_mb,MB,postgres,low,60,91.902,96.551,96.81
+05,2,memory_mb,MB,postgres,medium,60,109.339,118.525,121.5
+05,2,memory_mb,MB,postgres,high,60,141.078,152.935,154.1
+05,2,cpu_percent,percentual de um nucleo,prometheus,low,60,0.641,1.442,2.68
+05,2,cpu_percent,percentual de um nucleo,prometheus,medium,60,0.431,0.871,0.95
+05,2,cpu_percent,percentual de um nucleo,prometheus,high,60,0.139,0.194,1.93
+05,2,memory_mb,MB,prometheus,low,60,36.484,40.002,40.61
+05,2,memory_mb,MB,prometheus,medium,60,42.318,42.791,42.84
+05,2,memory_mb,MB,prometheus,high,60,42.292,43.026,43.14
+05,2,cpu_percent,percentual de um nucleo,cadvisor,low,60,0.011,0.011,0.31
+05,2,cpu_percent,percentual de um nucleo,cadvisor,medium,60,0.051,0.321,1.72
+05,2,cpu_percent,percentual de um nucleo,cadvisor,high,60,0.071,0.274,1.53
+05,2,memory_mb,MB,cadvisor,low,60,18.939,19.861,20.31
+05,2,memory_mb,MB,cadvisor,medium,60,19.426,21.22,21.28
+05,2,memory_mb,MB,cadvisor,high,60,20.24,21.6,21.72

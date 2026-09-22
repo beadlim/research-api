@@ -4,3 +4,13 @@ stages/*/service
 *.out
 results/**/raw.json
 .worktrees/
+
+# Backups locais de edicao
+*.bak
+*.bak-*
+
+# Saida de console das execucoes: ruido de progresso, sem valor de reproducao.
+# Os dados estruturados ficam em summary.json e nos CSVs de metricas.
+results/**/k6-console.log
+results/**/compose.log
+results/coleta-*.log
