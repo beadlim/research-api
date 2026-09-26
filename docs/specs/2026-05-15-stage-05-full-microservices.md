@@ -1,5 +1,10 @@
 # Spec: Stage 05 — Full Microservices com Schema-per-Service
 
+> **Nota (documento histórico):** esta spec é da fase preliminar. Os caminhos `results/stage-05/summary.json` citados
+> abaixo foram movidos para `results/_coleta-preliminar/stage-05/`. Os resultados válidos estão em
+> `results/stage-05/run-1..3/` e `results/consolidated/`.
+
+
 **Quality Score:** 4.7/5.0 (Completeness: 5.0 | Clarity: 4.5 | Consistency: 4.5 | Feasibility: 5.0 | Testability: 4.5)
 
 ---

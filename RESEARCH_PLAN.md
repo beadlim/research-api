@@ -4,6 +4,11 @@
 **Objetivo:** Medir impactos de desempenho da migração incremental via Strangler Pattern  
 **Metodologia:** Estudo de caso único, abordagem quantitativa, coleta em 4 estágios
 
+> **Nota:** este é o plano original da pesquisa. Os resultados por estágio e a tabela comparativa abaixo são da
+> coleta preliminar, que foi descartada (sumários em `results/_coleta-preliminar/`). Os resultados válidos, com sete
+> estágios (incluindo os controles 01b e 05b) e três repetições cada, estão em `results/<estágio>/run-1..3/` e
+> consolidados em `results/consolidated/` (`tcc_tables.md`). A coleta é feita com `scripts/run-stage.sh` (ver `scripts/README.md`).
+
 ---
 
 ## Stack Técnico
@@ -75,7 +80,7 @@ Mix de cenários:
 
 **Arquivo:** `docker-compose.01-monolith.yml`  
 **k6:** `load-tests/k6/baseline.js`  
-**Resultados:** `results/baseline/summary.json`
+**Resultados da coleta preliminar (descartada):** `results/_coleta-preliminar/baseline/summary.json`. Resultados válidos: `results/baseline/run-1..3/`
 
 | Métrica | Resultado |
 |---|---|
@@ -89,9 +94,7 @@ Mix de cenários:
 
 **Como rodar:**
 ```bash
-docker compose -f docker-compose.01-monolith.yml up --build -d
-k6 run --summary-export results/baseline/summary.json load-tests/k6/baseline.js
-docker compose -f docker-compose.01-monolith.yml down
+scripts/run-stage.sh 01 3
 ```
 
 ---
@@ -107,7 +110,7 @@ docker compose -f docker-compose.01-monolith.yml down
 **Arquivo:** `docker-compose.02-users-extracted.yml`  
 **NGINX config:** `gateway/nginx/stage-02.conf`  
 **k6:** `load-tests/k6/stage-02-users-extracted.js`  
-**Resultados:** `results/stage-02/summary.json`
+**Resultados da coleta preliminar (descartada):** `results/_coleta-preliminar/stage-02/summary.json`. Resultados válidos: `results/stage-02/run-1..3/`
 
 | Métrica | Resultado | vs Baseline |
 |---|---|---|
@@ -123,9 +126,7 @@ docker compose -f docker-compose.01-monolith.yml down
 
 **Como rodar:**
 ```bash
-docker compose -f docker-compose.02-users-extracted.yml up --build -d
-k6 run --summary-export results/stage-02/summary.json load-tests/k6/stage-02-users-extracted.js
-docker compose -f docker-compose.02-users-extracted.yml down
+scripts/run-stage.sh 02 3
 ```
 
 ---
@@ -142,7 +143,7 @@ docker compose -f docker-compose.02-users-extracted.yml down
 **Arquivo:** `docker-compose.03-products-extracted.yml`  
 **NGINX config:** `gateway/nginx/stage-03.conf`  
 **k6:** `load-tests/k6/stage-03-products-extracted.js`  
-**Resultados:** `results/stage-03/summary.json`
+**Resultados da coleta preliminar (descartada):** `results/_coleta-preliminar/stage-03/summary.json`. Resultados válidos: `results/stage-03/run-1..3/`
 
 | Métrica | Resultado | vs Stage 02 | vs Baseline |
 |---|---|---|---|
@@ -158,9 +159,7 @@ docker compose -f docker-compose.02-users-extracted.yml down
 
 **Como rodar:**
 ```bash
-docker compose -f docker-compose.03-products-extracted.yml up --build -d
-k6 run --summary-export results/stage-03/summary.json load-tests/k6/stage-03-products-extracted.js
-docker compose -f docker-compose.03-products-extracted.yml down
+scripts/run-stage.sh 03 3
 ```
 
 ---
@@ -179,7 +178,7 @@ docker compose -f docker-compose.03-products-extracted.yml down
 **Arquivo:** `docker-compose.04-orders-inventory.yml`  
 **NGINX config:** `gateway/nginx/stage-04.conf`  
 **k6:** `load-tests/k6/stage-04-orders-inventory.js`  
-**Resultados:** `results/stage-04/summary.json`
+**Resultados da coleta preliminar (descartada):** `results/_coleta-preliminar/stage-04/summary.json`. Resultados válidos: `results/stage-04/run-1..3/`
 
 | Métrica | Resultado | vs Stage 03 | vs Baseline |
 |---|---|---|---|
@@ -195,9 +194,7 @@ docker compose -f docker-compose.03-products-extracted.yml down
 
 **Como rodar:**
 ```bash
-docker compose -f docker-compose.04-orders-inventory.yml up --build -d
-k6 run --summary-export results/stage-04/summary.json load-tests/k6/stage-04-orders-inventory.js
-docker compose -f docker-compose.04-orders-inventory.yml down
+scripts/run-stage.sh 04 3
 ```
 
 ---
@@ -217,7 +214,7 @@ docker compose -f docker-compose.04-orders-inventory.yml down
 **Arquivo:** `docker-compose.05-full-microservices.yml`  
 **NGINX config:** `gateway/nginx/stage-05.conf`  
 **k6:** `load-tests/k6/stage-05-full-microservices.js`  
-**Resultados:** `results/stage-05/summary.json`
+**Resultados da coleta preliminar (descartada):** `results/_coleta-preliminar/stage-05/summary.json`. Resultados válidos: `results/stage-05/run-1..3/`
 
 | Métrica | Resultado | vs Stage 04 | vs Baseline |
 |---|---|---|---|
@@ -233,9 +230,7 @@ docker compose -f docker-compose.04-orders-inventory.yml down
 
 **Como rodar:**
 ```bash
-docker compose -f docker-compose.05-full-microservices.yml up --build -d
-k6 run --summary-export results/stage-05/summary.json load-tests/k6/stage-05-full-microservices.js
-docker compose -f docker-compose.05-full-microservices.yml down
+scripts/run-stage.sh 05 3
 ```
 
 ---
@@ -274,11 +269,9 @@ research-api/
 │           └── dashboards/json/
 │               └── monolith.json  ✅ (painéis CPU/mem usam process_* metrics)
 ├── results/
-│   ├── baseline/summary.json      ✅
-│   ├── stage-02/summary.json      ✅
-│   ├── stage-03/summary.json      ✅
-│   ├── stage-04/summary.json      ✅
-│   └── stage-05/summary.json      ✅
+│   ├── <estágio>/run-1..3/        ✅ resultados válidos (baseline, stage-01b, 02, 03, 04, 05, 05b)
+│   ├── consolidated/              ✅ latency_by_stage.csv, resources_by_stage.csv, tcc_tables.md
+│   └── _coleta-preliminar/        sumários da coleta preliminar descartada
 ├── docker-compose.01-monolith.yml          ✅
 ├── docker-compose.02-users-extracted.yml   ✅
 ├── docker-compose.03-products-extracted.yml ✅
@@ -289,7 +282,7 @@ research-api/
 
 ---
 
-## Tabela Comparativa Final (preencher ao longo dos estágios)
+## Tabela Comparativa da coleta preliminar (descartada; ver `results/consolidated/tcc_tables.md`)
 
 | Métrica | Stage 01 Monolito | Stage 02 +Users | Stage 03 +Products | Stage 04 +Orders/Inv | Stage 05 Full µS |
 |---|---|---|---|---|---|
